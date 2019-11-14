@@ -1,4 +1,4 @@
-package co.com.ceiba.reservationrestaurant.persistencia.repositories;
+package co.com.ceiba.reservationrestaurant.persistencia.dao;
 
 import org.springframework.data.repository.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import co.com.ceiba.reservationrestaurant.persistencia.entities.ClientEntity;
 
 @Transactional
-public interface ClientRepository extends Repository<ClientEntity, Integer> {
+public interface ClientDao extends Repository<ClientEntity, Integer> {
 
 	void save(ClientEntity clientEntity);
 

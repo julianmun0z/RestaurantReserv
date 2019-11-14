@@ -4,7 +4,6 @@ import java.util.Calendar;
 import java.util.Date;
 
 import co.com.ceiba.reservationrestaurant.dominio.strategies.ArgumentsValidator;
-import co.com.ceiba.reservationrestaurant.dto.ReservationRequest;
 
 public class Bill {
 
@@ -29,6 +28,12 @@ public class Bill {
 	private float price;
 	private int discountForPeople;
 	private int discpuntForDays;
+	private Reservation reservation;
+
+	public Bill(Reservation reservation) {
+		this.reservation = reservation;
+		this.getCaculatePriceAndDiscounts();
+	}
 
 	public Bill(float price, int discountForPeople, int discpuntForDays) {
 		this.price = price;
@@ -60,46 +65,45 @@ public class Bill {
 		this.discpuntForDays = discpuntForDays;
 	}
 
-	public Bill getCaculatePriceAndDiscounts(ReservationRequest reservationRequest, Bill bill) {
+	public void getCaculatePriceAndDiscounts() {
 		float price = INITIALIZING_VALUE;
-		price = giveValueToThePrice(reservationRequest);
-		price += getValueForPerson(reservationRequest);
-		price -= getDiscuontPerPeople(reservationRequest, price);
-		price -= getDiscountForDaysTuesdayAndWednesday(reservationRequest, price);
-		price += getFixedValueDecor(reservationRequest);
-		price = daysWithRestriction(reservationRequest, price);
-		bill.setDiscountForPeople((int) getDiscuontPerPeople(reservationRequest, price));
-		bill.setDiscpuntForDays((int) getDiscountForDaysTuesdayAndWednesday(reservationRequest, price));
-		bill.setPrice(price);
+		price = giveValueToThePrice();
+		price += getValueForPerson();
+		price -= getDiscuontPerPeople(price);
+		price -= getDiscountForDaysTuesdayAndWednesday(price);
+		price += getFixedValueDecor();
+		price = daysWithRestriction(price);
+		discountForPeople = (int) getDiscuontPerPeople(price);
+		discpuntForDays = (int) getDiscountForDaysTuesdayAndWednesday(price);
+		this.setPrice(price);
 		validationForFridatAndSaturday(price);
-		return bill;
 	}
 
-	public float giveValueToThePrice(ReservationRequest reservationRequest) {
+	public float giveValueToThePrice() {
 		float newPrice = INITIALIZING_VALUE;
-		if (reservationRequest.getFirstName() != null) {
+		if (this.reservation.getClient().getFirstName() != null) {
 			newPrice = FIXED_PRICE;
 		}
 		return newPrice;
 	}
 
-	public float getValueForPerson(ReservationRequest reservationRequest) {
+	public float getValueForPerson() {
 		float priceForPerson = INITIALIZING_VALUE;
-		priceForPerson = VALUE_FOR_PERSON * reservationRequest.getNumberPeople();
+		priceForPerson = VALUE_FOR_PERSON * reservation.getNumberPeople();
 		return priceForPerson;
 	}
 
-	public float getDiscuontPerPeople(ReservationRequest reservationRequest, float price) {
+	public float getDiscuontPerPeople(float price) {
 		float discuont = INITIALIZING_VALUE;
-		if (reservationRequest.getNumberPeople() >= MINIMUM_OF_PEOPLE_FOR_DISCOUNT) {
+		if (reservation.getNumberPeople() >= MINIMUM_OF_PEOPLE_FOR_DISCOUNT) {
 			discuont = price * PERCENT_FOR_PEOPLE / DISCOUNT_SPLITTER;
 		}
 		return discuont;
 	}
 
-	public float getDiscountForDaysTuesdayAndWednesday(ReservationRequest reservationRequest, float price) {
+	public float getDiscountForDaysTuesdayAndWednesday(float price) {
 		float discountDay = INITIALIZING_VALUE;
-		int day = reservationRequest.getReservationDate().get(Calendar.DAY_OF_WEEK);
+		int day = reservation.getReservationDate().get(Calendar.DAY_OF_WEEK);
 
 		if (day == TUESDAY || day == WEDNESDAY) {
 			discountDay = price * PERCENT_DAYS / DISCOUNT_SPLITTER;
@@ -108,30 +112,30 @@ public class Bill {
 		return discountDay;
 	}
 
-	public float getFixedValueDecor(ReservationRequest reservationRequest) {
+	public float getFixedValueDecor() {
 		float valueDecor = INITIALIZING_VALUE;
-		if (reservationRequest.isDecor()) {
+		if (reservation.isDecor()) {
 			valueDecor = FIXED_DECOR;
 		}
 		return valueDecor;
 	}
 
-	public float daysWithRestriction(ReservationRequest reservationRequest, float validation) {
+	public float daysWithRestriction(float price) {
 		float restriction = INITIALIZING_VALUE;
-		int day = reservationRequest.getReservationDate().get(Calendar.DAY_OF_WEEK);
-		long differenceBetweenDates = differenceBetweenCurrentDateAndReservationDate(reservationRequest);
+		int day = reservation.getReservationDate().get(Calendar.DAY_OF_WEEK);
+		long differenceBetweenDates = differenceBetweenCurrentDateAndReservationDate();
 		if ((day == FRIDAY || day == SATURDAY) && (differenceBetweenDates <= MAXIMUM_FOR_DAYS_FOR_RESTRICTION)) {
 			restriction = VALUE_SSIGNED_TO_THE_PRICE_FOR_RESTRICTION;
 		} else {
-			restriction = validation;
+			restriction = price;
 		}
 		return restriction;
 	}
 
-	public long differenceBetweenCurrentDateAndReservationDate(ReservationRequest reservationRequest) {
+	public long differenceBetweenCurrentDateAndReservationDate() {
 		long daysDifference = INITIALIZING_VALUE;
-		Date fechaEntrada = reservationRequest.getReservationDate().getTime();
-		Date fechaHoy = reservationRequest.getCurrentDate().getTime();
+		Date fechaEntrada = reservation.getReservationDate().getTime();
+		Date fechaHoy = reservation.getCurrentDate().getTime();
 		daysDifference = (fechaEntrada.getTime() - fechaHoy.getTime()) / MILLISECOND;
 		return daysDifference;
 	}

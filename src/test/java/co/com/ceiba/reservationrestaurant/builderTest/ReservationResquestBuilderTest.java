@@ -13,8 +13,10 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import co.com.ceiba.reservationrestaurant.persistencia.builders.ReservationResquestBuilder;
+import co.com.ceiba.reservationrestaurant.persistencia.entities.ReservationEntity;
 import co.com.ceiba.reservationrestaurant.services.ReservationRequestService;
 import co.com.ceiba.reservationrestaurant.dominio.Bill;
+import co.com.ceiba.reservationrestaurant.dominio.Client;
 import co.com.ceiba.reservationrestaurant.dominio.Reservation;
 import co.com.ceiba.reservationrestaurant.dto.ReservationRequest;
 
@@ -22,18 +24,15 @@ public class ReservationResquestBuilderTest {
 
 	private static final int NUMBER_PEOPLE = 5;
 	private static final float PRICE = 350000;
-	private static final float EXPECTED_PRICE = 293500;
 
 	private static final String FIRSTNAME = "juan";
 	private static final String LASTNAME = "gomez";
 	private static final String EMAIL = "J@J.COM";
 	private static final String PHONENUMBER = "123456789";
 
+	private static final int  EXPECTED_ID = 4; 
 	private static final boolean DECOR = true;
-	private static final int EXPECTED_DISCOUNT_PEOPLE = 44025;
-	private static final int EXPECTED_DISCOUNT_DAY = 0;
 	private static final Calendar DATE_WITH_TUESDAY_AND_WENESDAY = new GregorianCalendar(2019, 8, 01);
-
 	private static final Calendar DATE_FOR_DIVISION_DTO  = new GregorianCalendar(
 			2019, 9, 12);
 	
@@ -42,22 +41,31 @@ public class ReservationResquestBuilderTest {
 
 	@Mock
 	private Bill bill;
+	@Mock
+	private Reservation reservation;
+	
+	@Mock
+	private Client client;
+	
+	@Mock
+	private ReservationEntity reservationEntity;
 
 	@Mock
-	private ReservationRequestService reservationRequestService;
+	private ReservationRequestRepositoryPersistent reservationRequestService;
 
 	@InjectMocks
 	private ReservationResquestBuilder reservationResquestBuilder;
 
 	
+	
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
-		reservationRequestService = new ReservationRequestService();
+		reservationRequestService = new ReservationRequestRepositoryPersistent();
 	}
 	
 	@Test
-	public void divisionDtoTest() {
+	public void divisionReservationRequest() {
 		// arrange
 
 		when(reservationRequest.getFirstName()).thenReturn(FIRSTNAME);
@@ -70,8 +78,7 @@ public class ReservationResquestBuilderTest {
 		when(reservationRequest.getReservationDate())
 				.thenReturn(DATE_FOR_DIVISION_DTO);
 		when(reservationRequest.getCurrentDate()).thenReturn(DATE_WITH_TUESDAY_AND_WENESDAY);
-		when(bill.getDiscountForPeople()).thenReturn(15);
-		when(bill.getDiscpuntForDays()).thenReturn(15);
+
 
 		String expectedFisrtName = FIRSTNAME;
 		String expectedLastName = LASTNAME;
@@ -80,9 +87,6 @@ public class ReservationResquestBuilderTest {
 		Calendar expectedReservationDate = DATE_FOR_DIVISION_DTO;
 		int expecteNumberPeople = NUMBER_PEOPLE;
 		boolean expedtedDecor = DECOR;
-		float expectedPrice = EXPECTED_PRICE; 
-		int expetedDiscountPeople = EXPECTED_DISCOUNT_PEOPLE;
-		int expetedDiscountDays = EXPECTED_DISCOUNT_DAY;
 		// act
 
 		Reservation result = reservationResquestBuilder.divisionReservationRequest(reservationRequest);
@@ -95,11 +99,47 @@ public class ReservationResquestBuilderTest {
 		assertEquals(expectedReservationDate, result.getReservationDate());
 		assertEquals(expecteNumberPeople, result.getNumberPeople());
 		assertEquals(expedtedDecor, result.isDecor());
-		assertEquals(expectedPrice, result.getBill().getPrice(), 0);
-		assertEquals(expetedDiscountPeople,result.getBill().getDiscountForPeople());
-		assertEquals(expetedDiscountDays,result.getBill().getDiscpuntForDays());
-
 	}
 
+	@Test
+	public void getReservartionObjectReservationRequestTest() {
+		//arrange
+
+		when(reservation.getIdReservation()).thenReturn(EXPECTED_ID);
+		when(reservation.getNumberPeople()).thenReturn(NUMBER_PEOPLE);
+		when(reservation.isDecor()).thenReturn(DECOR);
+		when(reservation.getReservationDate())
+				.thenReturn(DATE_FOR_DIVISION_DTO);
+		when(reservationRequest.getCurrentDate()).thenReturn(DATE_WITH_TUESDAY_AND_WENESDAY);
+		when(reservation.getClient()).thenReturn(client);
+		when(client.getFirstName()).thenReturn(FIRSTNAME);
+		when(client.getLastName()).thenReturn(LASTNAME);
+		when(client.getEmail()).thenReturn(EMAIL);
+		when(client.getPhoneNumber()).thenReturn(PHONENUMBER);
+		
+		int expectedid = EXPECTED_ID;
+		String expectedFisrtName = FIRSTNAME;
+		String expectedLastName = LASTNAME;
+		String expectedEmail = EMAIL;
+		String expectedPhoneNumber = PHONENUMBER;
+		Calendar expectedReservationDate = DATE_FOR_DIVISION_DTO;
+		int expecteNumberPeople = NUMBER_PEOPLE;
+		boolean expedtedDecor = DECOR;
+		
+		//act
+		ReservationRequest result = reservationResquestBuilder.getReservartionObjectReservationRequest(reservation);
+		
+		
+		// assert
+		assertEquals(expectedid, result.getId());
+		assertEquals(expectedFisrtName, result.getFirstName());
+		assertEquals(expectedLastName, result.getLastName());
+		assertEquals(expectedEmail, result.getEmail());
+		assertEquals(expectedPhoneNumber, result.getPhoneNumber());
+		assertEquals(expectedReservationDate, result.getReservationDate());
+		assertEquals(expecteNumberPeople, result.getNumberPeople());
+		assertEquals(expedtedDecor, result.isDecor());
+
+	}
 	
 }

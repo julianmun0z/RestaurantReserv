@@ -15,15 +15,15 @@ public class Reservation {
 	private Bill bill;
 	private Client client;
 
-	public Reservation(int idReservation,Calendar reservationDate, int numberPeople, boolean decor, Bill bill, Client client) {
-
+	public Reservation(int idReservation, Calendar reservationDate, int numberPeople, boolean decor, Client client) {
+		
 		ArgumentsValidator.restrictionForNull(reservationDate, LA_FECHA_ES_OBLIGATORIA);
 		ArgumentsValidator.restrictionForValueZero(numberPeople, EL_NUMERO_DE_PERSONAS_PARA_LA_RESERVA_ES_OBLIGATORIO);
+		
 		this.idReservation = idReservation;
 		this.reservationDate = reservationDate;
 		this.numberPeople = numberPeople;
 		this.decor = decor;
-		this.bill = bill;
 		this.client = client;
 	}
 
@@ -39,17 +39,17 @@ public class Reservation {
 		return idReservation;
 	}
 
-	public void setIdReservation(int idReservation) {
-		this.idReservation = idReservation;
-	}
+//	public void setIdReservation(int idReservation) {
+//		this.idReservation = idReservation;
+//	}
 
 	public Client getClient() {
 		return client;
 	}
 
-	public void setClient(Client client) {
-		this.client = client;
-	}
+//	public void setClient(Client client) {
+//		this.client = client;
+//	}
 
 	public void setReservationDate(Calendar reservationDate) {
 		this.reservationDate = reservationDate;
@@ -63,16 +63,25 @@ public class Reservation {
 		return numberPeople;
 	}
 
-	public void setNumberPeople(int numberPeople) {
-		this.numberPeople = numberPeople;
-	}
+//	public void setNumberPeople(int numberPeople) {
+//		this.numberPeople = numberPeople;
+//	}
 
-	public void setDecor(boolean decor) {
-		this.decor = decor;
-	}
+//	public void setDecor(boolean decor) {
+//		this.decor = decor;
+//	}
 
 	public boolean isDecor() {
 		return decor;
 	}
 
+	Calendar currentDate = Calendar.getInstance();
+	
+	public Calendar getCurrentDate() {
+		return currentDate;
+	}
+
+//	public void setCurrentDate(Calendar currentDate) {
+//		this.currentDate = currentDate;
+//	}
 }

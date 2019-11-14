@@ -1,15 +1,12 @@
 package co.com.ceiba.reservationrestaurant.persistencia.builders;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import co.com.ceiba.reservationrestaurant.dominio.Bill;
+
 import co.com.ceiba.reservationrestaurant.persistencia.entities.BillEntity;
 
 @Configuration
 public class BillBuilder {
-
-	@Autowired
-	ReservationBuilder reservationBuilder;
 
 	public BillEntity converBillToBillEntity(Bill bill) {
 

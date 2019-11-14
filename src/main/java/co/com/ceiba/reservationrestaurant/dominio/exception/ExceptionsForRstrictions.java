@@ -7,5 +7,4 @@ public class ExceptionsForRstrictions extends RuntimeException {
 	public ExceptionsForRstrictions(String message) {
 		super(message);
 	}
-
 }

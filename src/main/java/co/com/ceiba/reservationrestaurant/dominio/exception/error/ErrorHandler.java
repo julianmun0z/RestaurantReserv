@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import co.com.ceiba.reservationrestaurant.dominio.exception.ExceptionsForRstrictions;
- 
+
 public class ErrorHandler extends ResponseEntityExceptionHandler {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ErrorHandler.class);
@@ -20,7 +20,7 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
 	public ErrorHandler() {
 		CODIGOS_ESTADO.put(ExceptionsForRstrictions.class.getSimpleName(), HttpStatus.BAD_REQUEST.value());
 
-	} 
+	}
 
 	@ExceptionHandler(Exception.class)
 	public final ResponseEntity<Error> handleAllExceptions(Exception exception) {
@@ -41,7 +41,7 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
 
 		}
 
-		return resultado; 
+		return resultado;
 	}
 
 }

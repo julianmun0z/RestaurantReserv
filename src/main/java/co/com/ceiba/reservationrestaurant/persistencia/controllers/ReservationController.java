@@ -1,4 +1,4 @@
-package co.com.ceiba.reservationrestaurant.controllers;
+package co.com.ceiba.reservationrestaurant.persistencia.controllers;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import co.com.ceiba.reservationrestaurant.dominio.Reservation;
-import co.com.ceiba.reservationrestaurant.services.ReservationService;
+import co.com.ceiba.reservationrestaurant.persistencia.repositories.ReservationRepositoryPersistent;
 
 @CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 @RestController
@@ -18,7 +18,7 @@ import co.com.ceiba.reservationrestaurant.services.ReservationService;
 public class ReservationController {
 
 	@Autowired
-	ReservationService reservationService;
+	ReservationRepositoryPersistent reservationService;
 
 	@GetMapping
 	public List<Reservation> getClient() {

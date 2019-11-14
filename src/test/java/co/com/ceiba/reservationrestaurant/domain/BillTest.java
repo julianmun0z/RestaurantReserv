@@ -76,7 +76,7 @@ public class BillTest {
 	@Mock
 	private Reservation reservation;
 	@Mock
-	private ReservationRequestService reservationRequestService;
+	private ReservationRequestRepositoryPersistent reservationRequestService;
 
 	@Before
 	public void setUp() {

@@ -1,4 +1,4 @@
-package co.com.ceiba.reservationrestaurant.controllers;
+package co.com.ceiba.reservationrestaurant.persistencia.controllers;
 
 import java.util.List;
 
@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import co.com.ceiba.reservationrestaurant.dto.ReservationRequest;
-import co.com.ceiba.reservationrestaurant.services.ReservationRequestService;
+import co.com.ceiba.reservationrestaurant.aplicacion.dto.ReservationRequest;
+import co.com.ceiba.reservationrestaurant.persistencia.repositories.ReservationRequestRepositoryPersistent;
 
 @CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 @RestController
@@ -22,32 +22,31 @@ import co.com.ceiba.reservationrestaurant.services.ReservationRequestService;
 public class ReservationRequestController {
 
 	@Autowired
-	ReservationRequestService reservationRequestService;
+	ReservationRequestRepositoryPersistent reservationRequestRepositoryPersistent; 
 	ReservationRequest reservationRequest;
 
 	@GetMapping
 	public List<ReservationRequest> getReservationRequest() {
-		return reservationRequestService.getReservationRequests();
+		return reservationRequestRepositoryPersistent.getReservationRequests();
 	}
 
 	@PostMapping
-	public void add(@RequestBody ReservationRequest reservationRequest) {
-		reservationRequestService.addReservationResquest(reservationRequest);
+	public void addReservationResquest(@RequestBody ReservationRequest reservationRequest) {
+		reservationRequestRepositoryPersistent.addReservationRequest(reservationRequest);
 	}
 
 	@GetMapping(path = { "/{id}" })
-	public ReservationRequest getClientForId(@PathVariable("id") int id) {
-		return reservationRequestService.ReservationRequestById(id);
-
+	public ReservationRequest getReservationRequestForId(@PathVariable("id") int id) {
+		return reservationRequestRepositoryPersistent.ReservationRequestById(id);
 	}
 
 	@PutMapping(path = { "/{id}" })
-	public void editar(@RequestBody ReservationRequest reservationRequest, @PathVariable("id") int id) {
-		reservationRequestService.editReservationResquest(reservationRequest);
+	public void editReservationResquest(@RequestBody ReservationRequest reservationRequest, @PathVariable("id") int id) {
+		reservationRequestRepositoryPersistent.editReservationRequest(reservationRequest);
 	}
 
 	@DeleteMapping(path = { "/{id}" })
 	public ReservationRequest delete(@PathVariable("id") int id) {
-		return reservationRequestService.deleteReservationRequest(id);
+		return reservationRequestRepositoryPersistent.deleteReservationRequest(id);
 	}
 }
